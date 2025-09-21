@@ -25,5 +25,5 @@
 * You can also watch Mailjet documentation using this link: https://dev.mailjet.com/email/reference/
 # How to find MAILJET_AUTH:
 * You need to have an API key and Secret key from your`s Mailjet cabinet.
-* You`re going on https://www.base64encode.org/ and writing: API key:Secret key, click encode and copy the result
+* You`re going to https://www.base64encode.org/ and writing: API key:Secret key, click encode and copy the result
 * Now you have to write into the config.py MAILJET_AUTH = 'Basic (Copied result)', e.g. MAILJET_AUTH = 'dXNlcm5hbWU6cGFzc3dvcmQ='
