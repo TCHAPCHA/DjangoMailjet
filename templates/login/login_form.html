@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-center mt-5">
+    <form method="post" class="p-4 border rounded bg-light shadow" style="width: 500px;">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="registerEmailInput">Email address</label>
+            <input type="email"
+                   class="form-control"
+                   id="registerEmailInput"
+                   aria-describedby="emailHelp"
+                   placeholder="Enter email"
+                   name="email"
+                   value="{{ request.POST.email }}">
+            <small id="emailHelp" class="form-text text-muted">
+                We'll never share your email with anyone else.
+            </small>
+        </div>
+        <div class="form-group mb-3">
+            <label for="registerPasswordInput">Password</label>
+            <input type="password"
+                   class="form-control"
+                   id="registerPasswordInput"
+                   placeholder="Password"
+                   name="password"
+                   minlength="6">
+        </div>
+        {% if error %}
+            <p style="color:red" class="text-center mt-3">{{ error }}</p>
+        {% endif %}
+        <button type="submit" class="btn btn-primary w-50 d-block mx-auto"
+                name="action" value="data_submit">Login</button>
+    </form>
+</div>
+{% endblock %}
