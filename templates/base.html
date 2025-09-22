@@ -18,9 +18,18 @@
     <body>
         <nav class="navbar navbar-dark bg-dark">
             <div class="container">
-                <a href="{% url "registration:index" %}" class="navbar-brand">Register/Login Test Site</a>
+                <a href="{% url 'index' %}" class="navbar-brand fw-bold text-white fs-4 d-flex align-items-center">
+{#    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-lightning me-2" viewBox="0 0 16 16">#}
+{#      <path d="M11.3 1L1 10.5h5v4L15 5.5h-5V1z"/>#}
+{#    </svg>#}
+    {% block navbar %}Django{% endblock %}
+</a>
+
                 <span class="navbar-text">
-                    <a href="/admin/" class="me-2" target="_blank">Admin Panel</a>
+                    {% if show_dashboard_btn %}
+                        <a href="{% url 'dashboard' %}" target="_blank" class="btn btn-outline-light btn-sm me-2 shadow-sm">Dashboard</a>
+                    {% endif %}
+                    {# <a href="/admin/" class="btn btn-outline-light btn-sm me-2 shadow-sm" target="_blank">Admin Panel</a> #}
                 </span>
             </div>
         </nav>

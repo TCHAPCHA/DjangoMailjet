@@ -1,12 +1,9 @@
 from django.shortcuts import render, redirect
-from registration import models
-import hashlib
-
-def hash_password(password):
-    sha = hashlib.sha256(password.encode('utf-8')).hexdigest()
-    return sha
+from django.contrib.auth import authenticate, login
 
 def index(request):
+    next_url = request.GET.get('next', '/')
+
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -14,17 +11,24 @@ def index(request):
         if not email or not password:
             return render(request, 'login/login_form.html', {"error": "Enter email and password"})
 
-        # Хэшируем пароль
-        hashed_pw = hash_password(password)
+    #     try:
+    #         if check_password(password, models.Users.objects.get(email=email).password):
+    #             return redirect('login:login_success')
+    #         else:
+    #             return render(request, 'login/login_form.html', {"error": "Invalid email or password"})
+    #     except models.Users.DoesNotExist:
+    #         return render(request, 'login/login_form.html', {"error": "Invalid email or password"})
+    # return render(request, 'login/login_form.html')
 
-        try:
-            # Пытаемся найти пользователя по email и паролю
-            user = models.Users.objects.get(email=email, password=hashed_pw)
-            return redirect('login:login_success')
-        except models.Users.DoesNotExist:
-            return render(request, 'login/login_form.html', {"error": "Invalid email or password"})
+        user = authenticate(request, username=email, password=password)
 
-    return render(request, 'login/login_form.html')
+        if user is not None:
+            login(request, user)
+            return redirect(request.POST.get('next')) if request.POST.get('next') != '/' else redirect('dashboard')
+        else:
+            return render(request, "login/login_form.html", {"error": "Invalid email or password", "next": next_url})
+
+    return render(request, 'login/login_form.html', {"next": next_url})
 
 def login_success(request):
     return render(request, 'login/login_success.html')
