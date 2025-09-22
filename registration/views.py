@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 import requests
 import random
@@ -14,10 +15,6 @@ def generate_unique_id(email, code):
     time_now = datetime.now(timezone.utc).isoformat()
     raw_string = f"{email}{code}{time_now}"
     sha = hashlib.sha256(raw_string.encode('utf-8')).hexdigest()
-    return sha
-
-def hash_password(password):
-    sha = hashlib.sha256(password.encode('utf-8')).hexdigest()
     return sha
 
 def send_code(email, request):
@@ -57,7 +54,7 @@ def index(request):
                 return render(request, 'registration/register_email_input.html',
                               {"error": "Enter email and password"})
 
-            if models.Users.objects.filter(email=email).exists():
+            if models.Users.objects.filter(username=email).exists():
                 return render(request, 'registration/register_email_input.html', {"error": "This email is already registered"})
 
             request.session['temp_password'] = password
@@ -83,7 +80,7 @@ def index(request):
             ).first()
 
             if code_obj:
-                models.Users.objects.create(email=email, password=hash_password(password))
+                models.Users.objects.create(username=email, password=make_password(password))
 
                 code_obj.is_active = False
                 code_obj.save()
